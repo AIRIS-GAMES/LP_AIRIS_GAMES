@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深層心理診断 | あなたに合うCosmiiは？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#12102A;
+    --bg-panel:#1D1A3F;
+    --bg-panel-2:#252150;
+    --line:#39346E;
+    --text-main:#F3F0FF;
+    --text-sub:#A79FC9;
+    --gold:#FFB86B;
+    --gold-dim:#7A5B34;
+    --mint:#7DE0C4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-deep);
+    color:var(--text-main);
+    font-family:'Noto Sans JP', sans-serif;
+    line-height:1.75;
+    overflow-x:hidden;
+    position:relative;
+  }
+  h1,h2,h3,.display{
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+
+  /* starfield */
+  #stars{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .star{
+    position:absolute; width:2px; height:2px; border-radius:50%;
+    background:#EDE9FF; opacity:.5;
+    animation:twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.15; transform:scale(1);}
+    50%{opacity:.9; transform:scale(1.6);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .star{animation:none; opacity:.4;}
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width:480px; margin:0 auto;
+    padding:0 24px 80px;
+    min-height:100vh;
+  }
+
+  /* screens */
+  .screen{ display:none; animation:fadeIn .5s ease; }
+  .screen.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* HERO */
+  #hero{ padding-top:14vh; text-align:center; }
+  .kicker{
+    font-size:14px; color:var(--text-sub); margin-bottom:18px;
+    font-family:'Zen Maru Gothic', sans-serif;
+  }
+  .hero-title{
+    font-size:34px; line-height:1.5; margin:0 0 22px;
+    color:var(--text-main);
+  }
+  .hero-title em{
+    font-style:normal; color:var(--gold);
+  }
+  .hero-sub{
+    font-size:15px; color:var(--text-sub); margin-bottom:44px;
+  }
+  .constellation{
+    width:180px; height:180px; margin:0 auto 40px;
+    position:relative;
+  }
+
+  button, .btn{
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-size:16px; font-weight:700;
+    border:none; cursor:pointer;
+    border-radius:999px;
+    padding:16px 40px;
+    background:var(--gold);
+    color:#2A1B08;
+    box-shadow:0 8px 24px rgba(255,184,107,.25);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button:hover, .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(255,184,107,.35); }
+  button:active, .btn:active{ transform:translateY(0); }
+
+  .ghost-btn{
+    background:transparent; color:var(--text-sub);
+    border:1px solid var(--line);
+    box-shadow:none; font-weight:500; font-size:14px;
+    padding:12px 28px;
+  }
+  .ghost-btn:hover{ box-shadow:none; border-color:var(--gold-dim); color:var(--gold); }
+
+  /* QUIZ */
+  #quiz{ padding-top:12vh; }
+  .progress{
+    display:flex; gap:8px; justify-content:center; margin-bottom:36px;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--line);
+    transition:background .3s ease, transform .3s ease;
+  }
+  .dot.done{ background:var(--mint); }
+  .dot.now{ background:var(--gold); transform:scale(1.4); }
+
+  .q-text{
+    font-size:20px; text-align:center; margin-bottom:32px;
+    color:var(--text-main);
+  }
+  .options{ display:flex; flex-direction:column; gap:12px; }
+  .opt{
+    text-align:left;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px 20px;
+    color:var(--text-main);
+    font-family:'Noto Sans JP', sans-serif;
+    font-size:15px;
+    font-weight:400;
+    box-shadow:none;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .opt:hover{
+    border-color:var(--gold);
+    background:var(--bg-panel-2);
+    transform:translateY(-1px);
+    box-shadow:none;
+  }
+
+  /* RESULT */
+  #result{ padding-top:10vh; text-align:center; }
+  .result-eyebrow{
+    color:var(--mint); font-size:14px; margin-bottom:10px;
+    font-family:'Zen Maru Gothic', sans-serif;
+  }
+  .result-type{
+    font-size:28px; margin:0 0 8px;
+  }
+  .result-lead{
+    font-size:14px; color:var(--text-sub); margin-bottom:28px;
+  }
+  .game-card{
+    background:linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:32px 26px;
+    margin-bottom:28px;
+    text-align:left;
+  }
+  .game-icon{
+    width:64px; height:64px; margin-bottom:18px;
+  }
+  .game-name{
+    font-size:22px; margin:0 0 12px;
+  }
+  .game-desc{
+    font-size:14.5px; color:var(--text-sub); margin-bottom:24px;
+  }
+  .game-card .btn{ width:100%; text-align:center; display:block; }
+
+  .other-types{
+    text-align:left; margin-top:8px;
+  }
+  .other-types h3{
+    font-size:14px; color:var(--text-sub); font-weight:500;
+    margin-bottom:14px; text-align:center;
+  }
+  .other-list{
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .other-item{
+    display:flex; align-items:center; gap:12px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    font-size:13.5px;
+    color:var(--text-sub);
+  }
+  .other-item .swatch{
+    width:8px; height:8px; border-radius:50%; flex-shrink:0;
+  }
+  .retry{ margin-top:36px; text-align:center; }
+
+  footer{
+    text-align:center; color:var(--line); font-size:12px;
+    margin-top:60px;
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section id="hero" class="screen active">
+    <div class="kicker">深層心理診断</div>
+    <svg class="constellation" viewBox="0 0 180 180" fill="none">
+      <g stroke="#39346E" stroke-width="1">
+        <line x1="40" y1="120" x2="80" y2="60"/>
+        <line x1="80" y1="60" x2="130" y2="90"/>
+        <line x1="80" y1="60" x2="100" y2="20"/>
+        <line x1="130" y1="90" x2="150" y2="140"/>
+      </g>
+      <g fill="#FFB86B">
+        <circle cx="40" cy="120" r="4"/>
+        <circle cx="100" cy="20" r="3"/>
+        <circle cx="150" cy="140" r="3"/>
+      </g>
+      <g fill="#F3F0FF">
+        <circle cx="80" cy="60" r="5"/>
+        <circle cx="130" cy="90" r="4"/>
+      </g>
+    </svg>
+    <h1 class="hero-title">あなたが本当に楽しめる<br>ゲーム、<em>選べていますか？</em></h1>
+    <p class="hero-sub">5つの質問に、直感で答えてください。<br>あなたの中に眠る性格が、ぴったりのゲームを教えてくれます。</p>
+    <button onclick="startQuiz()">診断をはじめる</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="screen">
+    <div class="progress" id="progress"></div>
+    <p class="q-text" id="qText"></p>
+    <div class="options" id="qOptions"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="screen">
+    <div class="result-eyebrow" id="rEyebrow">診断結果</div>
+    <h2 class="result-type" id="rType"></h2>
+    <p class="result-lead" id="rLead"></p>
+
+    <div class="game-card">
+      <svg class="game-icon" id="rIcon" viewBox="0 0 64 64"></svg>
+      <h3 class="game-name" id="rGameName"></h3>
+      <p class="game-desc" id="rGameDesc"></p>
+      <a class="btn" id="rGameLink" href="#" target="_blank" rel="noopener">ダウンロードする</a>
+    </div>
+
+    <div class="other-types">
+      <h3>気になる方は、他のタイプも見てみてください</h3>
+      <div class="other-list" id="otherList"></div>
+    </div>
+
+    <div class="retry">
+      <button class="ghost-btn" onclick="startQuiz()">もう一度診断する</button>
+    </div>
+  </section>
+
+  <footer>Cosmii Series — AIRIS GAMES</footer>
+</div>
+
+<script>
+/* ---------- starfield background ---------- */
+(function(){
+  const layer = document.getElementById('stars');
+  const n = 60;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + '%';
+    s.style.top = Math.random()*100 + '%';
+    s.style.animationDelay = (Math.random()*4) + 's';
+    layer.appendChild(s);
+  }
+})();
+
+/* ---------- quiz data ---------- */
+const questions = [
+  {
+    text: "夜、ふと目が覚めた。窓の外を見ると…",
+    options: [
+      {label:"一番星が、じっと動かずそこにあった", type:"A"},
+      {label:"星がいくつも、静かに並んでいた", type:"B"},
+      {label:"何かが横切った気がした", type:"C"},
+      {label:"遠くでリズムを刻むような瞬きがあった", type:"D"},
+      {label:"星が次々流れて、目で追いきれなかった", type:"E"},
+      {label:"特に気にせず、また眠ってしまった", type:"F"},
+    ]
+  },
+  {
+    text: "誰かに「あなたらしさ」を一言で言われるなら？",
+    options: [
+      {label:"「筋が通ってる人」", type:"A"},
+      {label:"「まとめるのがうまい人」", type:"B"},
+      {label:"「気づいたら動いてる人」", type:"C"},
+      {label:"「ノリがいい人」", type:"D"},
+      {label:"「負けず嫌いな人」", type:"E"},
+      {label:"「そばにいると落ち着く人」", type:"F"},
+    ]
+  },
+  {
+    text: "片付けをしていて、一番テンションが上がる瞬間は？",
+    options: [
+      {label:"バラバラだったものが、法則に沿ってピタッと収まった時", type:"A"},
+      {label:"似たものをまとめて、綺麗に3つ揃えられた時", type:"B"},
+      {label:"とにかく次々片付いて、山が減っていくのを見た時", type:"C"},
+      {label:"片付けながら鼻歌を歌っていた時", type:"D"},
+      {label:"制限時間内に終わらせられた時", type:"E"},
+      {label:"集めていたものを、並べて眺めている時", type:"F"},
+    ]
+  },
+  {
+    text: "迷路に迷い込んだら、あなたはどうする？",
+    options: [
+      {label:"まず全体を思い浮かべ、矛盾のない道を逆算する", type:"A"},
+      {label:"分かれ道ごとに「同じ」と印をつけて進む", type:"B"},
+      {label:"とりあえず目の前の道を突き進んでみる", type:"C"},
+      {label:"壁を叩いてリズムを取りながら歩く", type:"D"},
+      {label:"誰よりも早くゴールすることだけを考える", type:"E"},
+      {label:"焦らず、道端の小さな発見を楽しみながら歩く", type:"F"},
+    ]
+  },
+  {
+    text: "次のうち、一番「心地いい」と感じる時間は？",
+    options: [
+      {label:"静かな部屋で、ひとつのことにじっくり向き合う時間", type:"A"},
+      {label:"テンポよく物事が整理されていく時間", type:"B"},
+      {label:"頭を空っぽにして、手足だけ動かしている時間", type:"C"},
+      {label:"音楽に合わせて体が自然に動く時間", type:"D"},
+      {label:"誰かと競って、勝った瞬間", type:"E"},
+      {label:"お気に入りのものに囲まれて、まったりしている時間", type:"F"},
+    ]
+  }
+];
+
+const results = {
+  A:{
+    eyebrow:"論理型", typeName:"論理型 ―「答えは、必ずそこにある」人",
+    lead:"曖昧なまま進むより、筋道を立てて納得してから動きたい。あなたはそういう人です。",
+    gameName:"Cosmii Sudoku -論理パズル-",
+    desc:"運の要素はゼロ。すべての盤面は「論理だけで必ず解ける」ことが検証済みです。詰まったときの原因は運ではなく、まだ見つけていない一手。数字を使わない新感覚の論理パズルで、あなたの筋の通し方がそのまま武器になります。",
+    url:"https://apps.apple.com/jp/app/cosmii-sudoku-%E8%AB%96%E7%90%86%E3%83%91%E3%82%BA%E3%83%AB/id6797260932",
+    color:"#FFB86B",
+    icon: iconLogic
+  },
+  B:{
+    eyebrow:"整理型", typeName:"整理型 ―「揃える」ことに快感を覚える人",
+    lead:"バラバラなものを分類し、パターンを見つけて整えることに心地よさを感じるタイプです。",
+    gameName:"Cosmii 3マッチパズル",
+    desc:"揃えて消す、あの気持ちよさに理屈はいりません。テンポよく手を動かしながら、頭の中もどんどん整理されていく感覚を味わえます。",
+    url:"https://apps.apple.com/jp/app/cosmii-3%E3%83%9E%E3%83%83%E3%83%81%E3%83%91%E3%82%BA%E3%83%AB-%E3%82%B3%E3%82%B9%E3%83%9F%E3%83%BC-%E3%83%91%E3%82%BA%E3%83%AB/id6784988703",
+    color:"#7DE0C4",
+    icon: iconMatch
+  },
+  C:{
+    eyebrow:"衝動型", typeName:"衝動型 ―「まず動く」が答えの人",
+    lead:"考えるより先に手が動くタイプ。溜め込んだモヤモヤは、動いてこそ発散されます。",
+    gameName:"コスミー MOGU MOGU PANIC",
+    desc:"吸い込んで、吸い込んで、ゲーム世界を救え。理屈は後回し、テンポよく反射的に動きたい衝動をそのままぶつけられます。",
+    url:"https://apps.apple.com/jp/app/%E3%82%B3%E3%82%B9%E3%83%9F%E3%83%BC-mogu-mogu-panic/id6789935783",
+    color:"#FF8B8B",
+    icon: iconPanic
+  },
+  D:{
+    eyebrow:"感覚型", typeName:"感覚型 ―「リズムで生きている」人",
+    lead:"理屈より感覚。体が先にノる、そういう瞬間を大事にする人です。",
+    gameName:"Cosmii Rhythm Dash",
+    desc:"Tap, hold, and ride the beat。考えるより先に指が動く、あなたの感覚がそのままスコアになるリズムアクションです。",
+    url:"https://apps.apple.com/jp/app/cosmii-rhythm-dash-%E3%83%AA%E3%82%BA%E3%83%A0-%E3%83%80%E3%83%83%E3%82%B7%E3%83%A5/id6792287027",
+    color:"#C9A6FF",
+    icon: iconRhythm
+  },
+  E:{
+    eyebrow:"挑戦型", typeName:"挑戦型 ―「勝つ」ことでしか満たされない人",
+    lead:"負けず嫌いで、常に自分の記録や誰かとの差を意識してしまうタイプです。",
+    gameName:"Cosmii Arcade",
+    desc:"宇宙をぶっちぎるカートレースをはじめ、勝敗がはっきりつくアーケードゲームを収録。あなたの負けず嫌いな性格が、そのままプレイの原動力になります。",
+    url:"https://apps.apple.com/jp/app/cosmii-arcade-%E3%82%B3%E3%82%B9%E3%83%9F%E3%83%BC-%E3%82%A2%E3%83%BC%E3%82%B1%E3%83%BC%E3%83%88/id6790154239",
+    color:"#FFD166",
+    icon: iconArcade
+  },
+  F:{
+    eyebrow:"癒し型", typeName:"癒し型 ―「そばにいるだけで落ち着く」人",
+    lead:"勝ち負けより、心地よさを大事にするタイプ。お気に入りに囲まれた時間が何よりのご褒美です。",
+    gameName:"バグ猫 -マージ-",
+    desc:"バグった猫たちを集めて、眺めて、マージする。まったりとした時間の中で、コツコツ集める楽しさを味わえます。",
+    url:"https://apps.apple.com/jp/app/%E3%83%90%E3%82%B0%E7%8C%AB%E3%83%9E%E3%83%BC%E3%82%B8-%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E3%83%91%E3%82%BA%E3%83%AB/id6806795192",
+    color:"#B8B8F5",
+    icon: iconCat
+  }
+};
+
+/* ---------- simple type icons (abstract, no IP) ---------- */
+function iconLogic(color){ return `<rect x="8" y="8" width="20" height="20" rx="4" stroke="${color}" stroke-width="3" fill="none"/><rect x="36" y="8" width="20" height="20" rx="4" stroke="${color}" stroke-width="3" fill="none"/><rect x="8" y="36" width="20" height="20" rx="4" fill="${color}"/><rect x="36" y="36" width="20" height="20" rx="4" stroke="${color}" stroke-width="3" fill="none"/>`; }
+function iconMatch(color){ return `<circle cx="18" cy="18" r="9" fill="${color}"/><circle cx="46" cy="18" r="9" fill="${color}"/><circle cx="32" cy="42" r="9" fill="${color}"/>`; }
+function iconPanic(color){ return `<circle cx="32" cy="32" r="22" stroke="${color}" stroke-width="3" fill="none"/><circle cx="32" cy="32" r="10" fill="${color}"/>`; }
+function iconRhythm(color){ return `<path d="M6 40 L18 24 L28 44 L38 12 L48 40 L58 28" stroke="${color}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; }
+function iconArcade(color){ return `<path d="M32 6 L40 24 L58 24 L44 36 L50 56 L32 44 L14 56 L20 36 L6 24 L24 24 Z" fill="${color}"/>`; }
+function iconCat(color){ return `<circle cx="32" cy="36" r="18" fill="${color}"/><path d="M18 22 L22 8 L30 20 Z" fill="${color}"/><path d="M46 22 L42 8 L34 20 Z" fill="${color}"/>`; }
+
+/* ---------- state & flow ---------- */
+let answers = [];
+
+function startQuiz(){
+  answers = [];
+  show('quiz');
+  renderQuestion(0);
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+function renderProgress(idx){
+  const p = document.getElementById('progress');
+  p.innerHTML = '';
+  questions.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < idx ? ' done' : '') + (i === idx ? ' now' : '');
+    p.appendChild(d);
+  });
+}
+
+function renderQuestion(idx){
+  if(idx >= questions.length){ return showResult(); }
+  renderProgress(idx);
+  const q = questions[idx];
+  document.getElementById('qText').textContent = q.text;
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  q.options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt.label;
+    b.onclick = () => {
+      answers.push(opt.type);
+      renderQuestion(idx+1);
+    };
+    optWrap.appendChild(b);
+  });
+}
+
+function showResult(){
+  // tally, tie broken by most recent answer
+  const tally = {};
+  answers.forEach(t => tally[t] = (tally[t]||0) + 1);
+  let winner = answers[answers.length-1];
+  let max = 0;
+  answers.forEach(t => { if(tally[t] >= max){ max = tally[t]; winner = t; } });
+
+  const r = results[winner];
+  document.getElementById('rEyebrow').textContent = r.eyebrow;
+  document.getElementById('rType').textContent = r.typeName;
+  document.getElementById('rLead').textContent = r.lead;
+  document.getElementById('rGameName').textContent = r.gameName;
+  document.getElementById('rGameDesc').textContent = r.desc;
+  document.getElementById('rGameLink').href = r.url;
+  document.getElementById('rGameLink').textContent = r.gameName + ' をダウンロード';
+
+  const iconEl = document.getElementById('rIcon');
+  iconEl.innerHTML = r.icon(r.color);
+
+  const otherList = document.getElementById('otherList');
+  otherList.innerHTML = '';
+  Object.keys(results).forEach(key=>{
+    if(key === winner) return;
+    const item = results[key];
+    const row = document.createElement('div');
+    row.className = 'other-item';
+    row.innerHTML = `<span class="swatch" style="background:${item.color}"></span>${item.eyebrow} → ${item.gameName}`;
+    otherList.appendChild(row);
+  });
+
+  show('result');
+}
+</script>
+</body>
+</html>
