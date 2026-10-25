@@ -231,7 +231,7 @@
       </g>
     </svg>
     <h1 class="hero-title">あなたが本当に楽しめる<br>ゲーム、<em>選べていますか？</em></h1>
-    <p class="hero-sub">5つの質問に、直感で答えてください。<br>あなたの中に眠る性格が、ぴったりのゲームを教えてくれます。</p>
+    <p class="hero-sub">10の質問に、直感で答えてください。<br>あなたの中に眠る性格が、ぴったりのゲームを教えてくれます。</p>
     <button onclick="startQuiz()">診断をはじめる</button>
   </section>
 
@@ -291,42 +291,34 @@ const questions = [
       {label:"一番星が、じっと動かずそこにあった", type:"A"},
       {label:"星がいくつも、静かに並んでいた", type:"B"},
       {label:"何かが横切った気がした", type:"C"},
-      {label:"遠くでリズムを刻むような瞬きがあった", type:"D"},
-      {label:"星が次々流れて、目で追いきれなかった", type:"E"},
-      {label:"特に気にせず、また眠ってしまった", type:"F"},
+      {label:"遠くでリズムを刻むような瞬きがあった", type:"D"}
     ]
   },
   {
     text: "誰かに「あなたらしさ」を一言で言われるなら？",
     options: [
-      {label:"「筋が通ってる人」", type:"A"},
-      {label:"「まとめるのがうまい人」", type:"B"},
-      {label:"「気づいたら動いてる人」", type:"C"},
-      {label:"「ノリがいい人」", type:"D"},
       {label:"「負けず嫌いな人」", type:"E"},
       {label:"「そばにいると落ち着く人」", type:"F"},
+      {label:"「ここぞで決める人」", type:"G"},
+      {label:"「困ってる人を放っておけない人」", type:"H"}
     ]
   },
   {
     text: "片付けをしていて、一番テンションが上がる瞬間は？",
     options: [
       {label:"バラバラだったものが、法則に沿ってピタッと収まった時", type:"A"},
-      {label:"似たものをまとめて、綺麗に3つ揃えられた時", type:"B"},
       {label:"とにかく次々片付いて、山が減っていくのを見た時", type:"C"},
-      {label:"片付けながら鼻歌を歌っていた時", type:"D"},
       {label:"制限時間内に終わらせられた時", type:"E"},
-      {label:"集めていたものを、並べて眺めている時", type:"F"},
+      {label:"丸めた紙が、遠くのゴミ箱に一発で入った時", type:"G"}
     ]
   },
   {
     text: "迷路に迷い込んだら、あなたはどうする？",
     options: [
-      {label:"まず全体を思い浮かべ、矛盾のない道を逆算する", type:"A"},
       {label:"分かれ道ごとに「同じ」と印をつけて進む", type:"B"},
-      {label:"とりあえず目の前の道を突き進んでみる", type:"C"},
       {label:"壁を叩いてリズムを取りながら歩く", type:"D"},
-      {label:"誰よりも早くゴールすることだけを考える", type:"E"},
       {label:"焦らず、道端の小さな発見を楽しみながら歩く", type:"F"},
+      {label:"同じく迷っている人を見つけて、一緒に出口を探す", type:"H"}
     ]
   },
   {
@@ -334,10 +326,53 @@ const questions = [
     options: [
       {label:"静かな部屋で、ひとつのことにじっくり向き合う時間", type:"A"},
       {label:"テンポよく物事が整理されていく時間", type:"B"},
-      {label:"頭を空っぽにして、手足だけ動かしている時間", type:"C"},
-      {label:"音楽に合わせて体が自然に動く時間", type:"D"},
       {label:"誰かと競って、勝った瞬間", type:"E"},
-      {label:"お気に入りのものに囲まれて、まったりしている時間", type:"F"},
+      {label:"お気に入りのものに囲まれて、まったりしている時間", type:"F"}
+    ]
+  },
+  {
+    text: "休日、急に予定が空いた。どうする？",
+    options: [
+      {label:"考えるより先に、とりあえず外へ飛び出す", type:"C"},
+      {label:"好きな音楽をかけて、気分のままに過ごす", type:"D"},
+      {label:"前から狙っていた場所へ、一直線に向かう", type:"G"},
+      {label:"困っている友達がいないか、連絡してみる", type:"H"}
+    ]
+  },
+  {
+    text: "旅行の計画を立てるなら？",
+    options: [
+      {label:"移動時間まで計算して、完璧な行程表を作る", type:"A"},
+      {label:"現地の空気を感じて、その日の行き先を決める", type:"D"},
+      {label:"「誰よりも多く名所を回る」が目標", type:"E"},
+      {label:"みんなが楽しめるように、全員の希望を聞いて回る", type:"H"}
+    ]
+  },
+  {
+    text: "コンビニで気になる新商品を見つけた。あなたは？",
+    options: [
+      {label:"シリーズ全種類、きれいに揃えたくなる", type:"B"},
+      {label:"考える前に、もうカゴに入れている", type:"C"},
+      {label:"お気に入りコレクションに加えて、ひとりでニヤニヤ", type:"F"},
+      {label:"「これは当たりだ」と直感で一つに絞って買う", type:"G"}
+    ]
+  },
+  {
+    text: "子どものころ、夢中になった遊びは？",
+    options: [
+      {label:"積み木やブロックを、設計図どおりに組み立てる", type:"A"},
+      {label:"鬼ごっこで、とにかく走り回る", type:"C"},
+      {label:"ぬいぐるみと一緒に、のんびりおままごと", type:"F"},
+      {label:"ヒーローごっこで、いつも誰かを助ける役", type:"H"}
+    ]
+  },
+  {
+    text: "最後の質問。宇宙へひとつだけ持っていけるなら？",
+    options: [
+      {label:"何でもきれいに仕分けられる、魔法の収納ボックス", type:"B"},
+      {label:"お気に入りの曲が詰まった音楽プレイヤー", type:"D"},
+      {label:"自分の記録を刻むための、ピカピカのトロフィー", type:"E"},
+      {label:"遠くの星まで届く、特製の大砲", type:"G"}
     ]
   }
 ];
@@ -396,6 +431,24 @@ const results = {
     url:"https://apps.apple.com/jp/app/%E3%83%90%E3%82%B0%E7%8C%AB%E3%83%9E%E3%83%BC%E3%82%B8-%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E3%83%91%E3%82%BA%E3%83%AB/id6806795192",
     color:"#B8B8F5",
     icon: iconCat
+  },
+  G:{
+    eyebrow:"一発型", typeName:"一発型 ―「ここぞ」で決めたい人",
+    lead:"狙いを定めて、ここぞという瞬間に一気に決める。その一撃の手応えに燃えるタイプです。",
+    gameName:"Cosmii Cannon",
+    desc:"狙いを定めて、コスミーを大砲から撃ち出そう。角度とタイミングを見極めて、思い通りの一発が決まった瞬間の爽快感は格別です。",
+    url:"https://apps.apple.com/jp/app/cosmii-cannon/id6809099787",
+    color:"#6EC8FF",
+    icon: iconCannon
+  },
+  H:{
+    eyebrow:"救助型", typeName:"救助型 ―「誰かのために」動ける人",
+    lead:"困っている誰かを見ると、つい手を差し伸べたくなる。やさしさが行動力に変わるタイプです。",
+    gameName:"Cosmii Rescue",
+    desc:"ピンチの仲間たちを助け出せ。ひとりずつ救い出していくたびに、あたたかい達成感が積み重なっていきます。",
+    url:"https://apps.apple.com/jp/app/cosmii-rescue/id6811575619",
+    color:"#FF9ECF",
+    icon: iconRescue
   }
 };
 
@@ -405,6 +458,8 @@ function iconMatch(color){ return `<circle cx="18" cy="18" r="9" fill="${color}"
 function iconPanic(color){ return `<circle cx="32" cy="32" r="22" stroke="${color}" stroke-width="3" fill="none"/><circle cx="32" cy="32" r="10" fill="${color}"/>`; }
 function iconRhythm(color){ return `<path d="M6 40 L18 24 L28 44 L38 12 L48 40 L58 28" stroke="${color}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; }
 function iconArcade(color){ return `<path d="M32 6 L40 24 L58 24 L44 36 L50 56 L32 44 L14 56 L20 36 L6 24 L24 24 Z" fill="${color}"/>`; }
+function iconCannon(color){ return `<circle cx="22" cy="44" r="12" fill="${color}"/><rect x="24" y="22" width="30" height="14" rx="7" transform="rotate(-30 24 29)" fill="${color}"/><circle cx="54" cy="10" r="4" fill="${color}"/>`; }
+function iconRescue(color){ return `<path d="M32 54 C14 42 6 32 6 22 C6 14 12 8 20 8 C26 8 30 12 32 16 C34 12 38 8 44 8 C52 8 58 14 58 22 C58 32 50 42 32 54 Z" fill="${color}"/>`; }
 function iconCat(color){ return `<circle cx="32" cy="36" r="18" fill="${color}"/><path d="M18 22 L22 8 L30 20 Z" fill="${color}"/><path d="M46 22 L42 8 L34 20 Z" fill="${color}"/>`; }
 
 /* ---------- state & flow ---------- */
@@ -439,7 +494,8 @@ function renderQuestion(idx){
   document.getElementById('qText').textContent = q.text;
   const optWrap = document.getElementById('qOptions');
   optWrap.innerHTML = '';
-  q.options.forEach(opt=>{
+  const opts = q.options.slice().sort(()=>Math.random()-0.5);
+  opts.forEach(opt=>{
     const b = document.createElement('button');
     b.className = 'opt';
     b.textContent = opt.label;
